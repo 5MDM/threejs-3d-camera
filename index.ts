@@ -4,19 +4,14 @@ import {Quaternion, Vector3, PerspectiveCamera} from "three";
 
 const RADIAN_HALF: number = 1.570796;
 
-function clamp
-(min: number, num: number, max: number): number {
-  return Math.min(Math.max(num, min), max);
-}
-
 function supportsPointerLock() {
   return "pointerLockElement" in document;
 }
 
-function newCamera(o: {fov?: number, min?: number, max?: number} = {}) {
+function newCamera(o: {width: number, height: number, fov?: number, min?: number, max?: number} = {}) {
   return new PerspectiveCamera(
     o.fov || 80,
-    gameState.canvas.width / gameState.canvas.height,
+    o.width / o.height,
     o.min || 0.1,
     o.max || 1000,
   );
@@ -107,8 +102,10 @@ export class ControlCamera {
    * @param {number} [o.min=0.1] - The near clipping plane for the camera
    * @param {number} [o.max=1000] - The far clipping plane for the camera
    * @param {number} [o.mouseSensitivity=100] - The sensitivity of the camera movement
+   * @param {number} o.width - The canvas width
+   * @param {number} o.height - The canvas height
    */
-  constructor(o?: { fov?: number; min?: number; max?: number, mouseSensitivity?: number }) {
+  constructor(o?: { fov?: number; min?: number; max?: number, mouseSensitivity?: number, width: number, height: number }) {
     this.camera = newCamera(o);
     this.mouseSensitivity = o?.mouseSensitivity || 100;
     this.loop();
@@ -224,7 +221,7 @@ export class ControlCamera {
    * @param {MouseEvent} e - The touch move or mouse move event
    */
   moveMouse(e: MouseEvent) {
-    if (!this.canPanMouse) return;
+    if(!this.canPanMouse) return;
     const dx = e.movementX;
     const dy = e.movementY;
   
