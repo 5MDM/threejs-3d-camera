@@ -1,0 +1,21 @@
+{
+  "name": "threejs-3d-camera",
+  "version": "1.0.0",
+  "description": "An useful file that gives you an easy way to make a threejs camera that supports touch and pointer controls along with movement as well",
+  "main": "index.ts",
+  "type": "module",
+  "author": "5mdm",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.1",
+    "three": "^0.157.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "tsx": "^3.12.7"
+  },
+  "keywords": [
+    "threejs",
+    "camera"
+  ]
+}
