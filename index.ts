@@ -106,6 +106,9 @@ export class ControlCamera {
    * @param {number} o.height - The canvas height
    */
   constructor(o?: { fov?: number; min?: number; max?: number, mouseSensitivity?: number, width: number, height: number }) {
+    if(window == undefined) console.warn(
+      "threejs-3d-camera should only be used in the browser"
+    );
     this.camera = newCamera(o);
     this.mouseSensitivity = o?.mouseSensitivity || 100;
     this.loop();
