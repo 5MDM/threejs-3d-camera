@@ -1,4 +1,4 @@
-run = "node main.cjs"
+run = "node main.js"
 entrypoint = "main.js"
 hidden = [".config", "package-lock.json"]
 
