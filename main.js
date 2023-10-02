@@ -1,4 +1,4 @@
-import { Quaternion, Vector3, PerspectiveCamera } from "three"
+import { Quaternion, Vector3, PerspectiveCamera } from "three";
 
 // Thanks to DeltAndy123 for adding mouse support
 
