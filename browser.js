@@ -1,9 +1,9 @@
 // Thanks to DeltAndy123 for adding mouse support
 
-if(typeof THREE == "undefined") console.error(new Error(
+if(typeof THREE == "undefined") throw new Error(
     "Threejs-3d-camera error:\n"
   + "THREE is not defined. Make sure to include this file after a threejs script"
-));
+);
 
 const ControlCamera = (function() {
   "use strict";

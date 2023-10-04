@@ -1,4 +1,4 @@
-import { Quaternion, Vector3, PerspectiveCamera } from "three";
+const { Quaternion, Vector3, PerspectiveCamera } = require("three");
 
 // Thanks to DeltAndy123 for adding mouse support
 
@@ -52,7 +52,7 @@ function updateCamera(cam, mathX, mathY) {
 /**
  * A class that controls the camera quaternion and rotation from pointer events
  */
-export class ControlCamera {
+class ControlCamera {
   /**
    * The angle in radians for the x-axis rotation
    * @type {number}
@@ -274,14 +274,16 @@ export class ControlCamera {
   }
 }
 
+module.exports.ControlCamera = ControlCamera;
+
 /**
  * A class that extends the ControlCamera class and adds the movement functionality
  * @extends {ControlCamera}
  */
-export class MovementCamera extends ControlCamera {
+class MovementCamera extends ControlCamera {
   /**
    * The direction vector for the camera movement
-   * @type {THREE.Vector3}
+   * @type {import("three").Vector3}
    */
   direction = new Vector3()
   /**
@@ -392,3 +394,5 @@ export class MovementCamera extends ControlCamera {
     this.moveAbove(-s)
   }
 }
+
+module.exports.MovementCamera = MovementCamera;
