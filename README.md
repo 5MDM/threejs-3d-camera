@@ -16,3 +16,6 @@ After that, you can include in in your HTML file using a `<script>` tag, like th
 
 or like this:  
 `<script src="https://unpkg.com/threejs-3d-camera@1.0.6/browser.js"></script>`
+
+## Documentation
+For code documentation, go to: https://5mdm.github.io/threejs-3d-camera/
