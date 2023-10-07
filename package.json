@@ -1,6 +1,6 @@
 {
   "name": "threejs-3d-camera",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A package that gives you a way to make a threejs perspective camera that supports touch and pointer controls along with movement as well. WARNING: This is still in development",
   "type": "module",
   "author": "5mdm",
@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build"
+    "build": "vite build",
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "files": [
     "package.json",
@@ -30,9 +31,11 @@
     "README.md",
     "main.js",
     "main.cjs",
-    "browser.js"
+    "browser.js",
+    "jsdoc.json"
   ],
   "devDependencies": {
+    "docdash": "^2.0.2",
     "jsdoc": "^4.0.2",
     "vite": "^4.4.10"
   }

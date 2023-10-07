@@ -17,11 +17,18 @@ function newCamera(o = {}) {
   )
 }
 
+/** 
+ * @typedef {Object} Qpair
+ * @property {THREE.Quaternion} qx - The x-axis quaternion
+ * @property {THREE.Quaternion} qy - The y-axis quaternion
+ */
+
 /**
  * Sets the quaternions for the x-axis and z-axis rotations from the given angles
+ * @private
  * @param mathX - The angle in radians for the x-axis rotation
  * @param mathY - The angle in radians for the z-axis rotation
- * @returns The pair of quaternions for the rotations
+ * @returns {QPair} The pair of quaternions for the rotations
  */
 function setQuaternion(mathX, mathY) {
   const qx = new Quaternion()
@@ -32,13 +39,12 @@ function setQuaternion(mathX, mathY) {
   return { qx, qz }
 }
 
-// var current_qx = 0;
-
 /**
  * Updates the camera quaternion from the given angles using the setQuaternion function
  * @param cam - The camera object to be updated
  * @param mathX - The angle in radians for the x-axis rotation
  * @param mathY - The angle in radians for the z-axis rotation
+ * @returns {void}
  */
 function updateCamera(cam, mathX, mathY) {
   const { qx, qz } = setQuaternion(mathX, mathY)
