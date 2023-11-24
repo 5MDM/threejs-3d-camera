@@ -1,42 +1,34 @@
 {
   "name": "threejs-3d-camera",
-  "version": "1.0.7",
-  "description": "A package that gives you a way to make a threejs perspective camera that supports touch and pointer controls along with movement as well. WARNING: This is still in development",
-  "type": "module",
+  "version": "2.0.0",
+  "description": "A package that gives you a way to make a Three.js perspective camera that supports touch and pointer controls along with movement as well. WARNING: This is still in development",
   "author": "5mdm",
   "license": "MIT",
-  "main": "main.cjs",
+  "main": "./dist/index.js",
   "dependencies": {
     "three": "^0.157.0"
   },
-  "browser": "./browser.js",
-  "exports": {
-    ".": {
-      "import": "./main.js",
-      "require": "./main.cjs"
-    }
-  },
+  "browser": "./dist/browser.js",
   "keywords": [
     "threejs",
     "camera"
   ],
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "jsdoc": "jsdoc -c jsdoc.json"
+    "build": "tsc && node esbuild.mjs",
+    "buildTypescript": "tsc",
+    "esbuild": "node esbuild.mjs",
+    "buildDocs": "typedoc"
   },
   "files": [
     "package.json",
     "LICENSE",
-    "README.md",
-    "main.js",
-    "main.cjs",
-    "browser.js",
-    "jsdoc.json"
+    "README.md"
   ],
   "devDependencies": {
-    "docdash": "^2.0.2",
-    "jsdoc": "^4.0.2",
-    "vite": "^4.4.10"
+    "@types/node": "^20.9.5",
+    "@types/three": "^0.158.3",
+    "esbuild": "^0.19.7",
+    "typedoc": "^0.25.3",
+    "typescript": "^5.2.2"
   }
 }
