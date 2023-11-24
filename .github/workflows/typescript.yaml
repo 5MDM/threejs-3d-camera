@@ -1,0 +1,46 @@
+name: Build TypeScript
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build TypeScript
+        run: pnpm run build
+
+      - name: Publish to npm
+        env:
+          npm_token: ${{ secrets.NPM_TOKEN }}
+        if: ${{ env.npm_token != '' }}
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ env.npm_token }}
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Build TypeScript and publish to npm"
+          commit_options: "--no-verify --signoff"
+          file_pattern: "dist/*"
