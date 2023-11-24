@@ -5,18 +5,19 @@
   "author": "5mdm",
   "license": "MIT",
   "main": "./dist/index.js",
-  "dependencies": {
+  "types": "./dist/index.d.ts",
+  "browser": "./dist/browser.js",
+  "module": "./dist/index.js",
+  "peerDependencies": {
     "three": "^0.157.0"
   },
-  "browser": "./dist/browser.js",
   "keywords": [
     "threejs",
     "camera"
   ],
   "scripts": {
-    "build": "tsc && node esbuild.mjs",
-    "buildTypescript": "tsc",
-    "esbuild": "node esbuild.mjs",
+    "build": "node --no-warnings esbuild.mjs",
+    "build:dev": "node --no-warnings esbuild.mjs --no-dts",
     "buildDocs": "typedoc"
   },
   "files": [
