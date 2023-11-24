@@ -31,10 +31,12 @@ jobs:
         run: pnpm run build
 
       - name: Publish to npm
-        if: ${{ secrets.NPM_TOKEN != '' }}
+        env:
+          npm_token: ${{ secrets.NPM_TOKEN }}
+        if: ${{ env.npm_token != '' }}
         uses: JS-DevTools/npm-publish@v3
         with:
-          token: ${{ secrets.NPM_TOKEN }}
+          token: ${{ env.npm_token }}
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
