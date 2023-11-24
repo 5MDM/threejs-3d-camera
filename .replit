@@ -1,6 +1,6 @@
 run = "echo hi"
 entrypoint = "main.js"
-hidden = [".config", "package-lock.json", ".gitignore", "LICENSE"]
+hidden = [".config", "package-lock.json", ".gitignore", ".github", "LICENSE", ".local"]
 
 [packager]
 language = "nodejs"
