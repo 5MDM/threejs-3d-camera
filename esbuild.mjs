@@ -10,7 +10,11 @@ if (args.includes("--no-dts") || args.includes("-n")) {
 } else {
   console.log("Emitting d.ts files...");
   const tscTime = performance.now();
-  execSync("tsc --emitDeclarationOnly", { stdio: "inherit" });
+  try {
+    execSync("tsc --emitDeclarationOnly", { stdio: "inherit" });
+  } catch (e) {
+    process.exit(e.status); // Don't need to log anything since tsc already does this
+  }
   const files = fs.readdirSync("src");
   for (const file of files) {
     if (file.endsWith(".d.ts")) {

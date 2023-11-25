@@ -1,6 +1,7 @@
 {
   "entryPoints": [
-    "index.ts"
+    "src/module.ts",
+    "src/types.d.ts"
   ],
   "out": "docs"
 }
