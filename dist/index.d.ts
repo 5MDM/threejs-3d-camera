@@ -1,5 +1,25 @@
 import THREE from "three";
 /**
+ * Required Three.js classes for the camera classes
+ */
+interface RequiredThree {
+    /**
+     * The Three.js PerspectiveCamera class
+     * @see https://threejs.org/docs/#api/en/cameras/PerspectiveCamera
+     */
+    PerspectiveCamera: typeof THREE.PerspectiveCamera;
+    /**
+     * The Three.js Quaternion class
+     * @see https://threejs.org/docs/#api/en/math/Quaternion
+     */
+    Quaternion: typeof THREE.Quaternion;
+    /**
+     * The Three.js Vector3 class
+     * @see https://threejs.org/docs/#api/en/math/Vector3
+     */
+    Vector3: typeof THREE.Vector3;
+}
+/**
  * A class that controls the camera quaternion and rotation from pointer events
  */
 export declare class ControlCamera {
@@ -34,7 +54,7 @@ export declare class ControlCamera {
     /**
      * The Three.js classes to be used
      */
-    classes: RequiredThree;
+    protected readonly classes: RequiredThree;
     /**
      * Creates a new ControlCamera instance with a new camera object
      * @param o - The options for the camera object
@@ -233,3 +253,4 @@ export declare class MovementCamera extends ControlCamera {
      */
     moveDown(s?: number): void;
 }
+export {};
