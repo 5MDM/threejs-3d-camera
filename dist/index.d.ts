@@ -1,4 +1,24 @@
-import { PerspectiveCamera } from "three";
+import THREE from "three";
+/**
+ * Required Three.js classes for the camera classes
+ */
+interface RequiredThree {
+    /**
+     * The Three.js PerspectiveCamera class
+     * @see https://threejs.org/docs/#api/en/cameras/PerspectiveCamera
+     */
+    PerspectiveCamera: typeof THREE.PerspectiveCamera;
+    /**
+     * The Three.js Quaternion class
+     * @see https://threejs.org/docs/#api/en/math/Quaternion
+     */
+    Quaternion: typeof THREE.Quaternion;
+    /**
+     * The Three.js Vector3 class
+     * @see https://threejs.org/docs/#api/en/math/Vector3
+     */
+    Vector3: typeof THREE.Vector3;
+}
 /**
  * A class that controls the camera quaternion and rotation from pointer events
  */
@@ -26,31 +46,36 @@ export declare class ControlCamera {
     /**
      * The PerspectiveCamera that this camera uses
      */
-    camera: PerspectiveCamera;
+    camera: THREE.PerspectiveCamera;
     /**
      * The canvas element the camera is bound to
      */
     canvas: HTMLCanvasElement;
     /**
+     * The Three.js classes to be used
+     */
+    protected readonly classes: RequiredThree;
+    /**
      * Creates a new ControlCamera instance with a new camera object
+     * @param o - The options for the camera object
      * @param o.canvas - The canvas element to bind the camera to
      * @param o.width - The canvas width
      * @param o.height - The canvas height
-     * @param [o={}] - The options for the camera object
      * @param [o.fov=80] - The field of view for the camera in degrees
      * @param [o.min=0.1] - The near clipping plane for the camera
      * @param [o.max=1000] - The far clipping plane for the camera
      * @param [o.mouseSensitivity=100] - The sensitivity of the camera movement
+     * @param classes - The Three.js classes to be used
      */
     constructor(o: {
         canvas: HTMLCanvasElement;
         width: number;
         height: number;
-        fov: number;
-        min: number;
-        max: number;
-        mouseSensitivity: number;
-    });
+        fov?: number;
+        min?: number;
+        max?: number;
+        mouseSensitivity?: number;
+    }, classes: RequiredThree);
     /**
      * Updates the camera quaternion from the current angles and requests an animation frame
      */
@@ -125,29 +150,29 @@ export declare class ControlCamera {
      * Enables the camera panning using touch screen and adds the event listeners to the element
      * @returns The current instance of ControlCamera
      */
-    enableTouch(): ControlCamera;
+    enableTouch(): this;
     /**
      * Enables the camera panning using the mouse and adds the event listeners to the element
      * @returns The current instance of ControlCamera
      */
-    enableMouse(): ControlCamera;
+    enableMouse(): this;
     /**
      * Sets the default angles for the camera quaternion and updates it accordingly
      * @param x - The angle in radians for the x-axis rotation
      * @param y - The angle in radians for the y-axis rotation
      * @returns The current instance of ControlCamera
      */
-    setDefault(x: number, y: number): ControlCamera;
+    private setDefault;
     /**
      * Disables the camera panning using touch controls
      * @returns The current instance of ControlCamera
      */
-    disableTouch(): ControlCamera;
+    disableTouch(): this;
     /**
      * Disables the camera panning using mouse controls
      * @returns The current instance of ControlCamera
      */
-    disableMouse(): ControlCamera;
+    disableMouse(): this;
 }
 /**
  * A class that extends the ControlCamera class and adds movement functionality
@@ -163,24 +188,25 @@ export declare class MovementCamera extends ControlCamera {
     canMove: boolean;
     /**
      * Creates a new MovementCamera instance with a new camera object
+     * @param o - The options for the camera object
      * @param o.canvas - The canvas element to bind the camera to
      * @param o.width - The canvas width
      * @param o.height - The canvas height
-     * @param [o={}] - The options for the camera object
      * @param [o.fov=80] - The field of view for the camera in degrees
      * @param [o.min=0.1] - The near clipping plane for the camera
      * @param [o.max=1000] - The far clipping plane for the camera
      * @param [o.mouseSensitivity=100] - The sensitivity of the camera movement
+     * @param classes - The Three.js classes to be used
      */
     constructor(o: {
         canvas: HTMLCanvasElement;
         width: number;
         height: number;
-        fov: number;
-        min: number;
-        max: number;
-        mouseSensitivity: number;
-    });
+        fov?: number;
+        min?: number;
+        max?: number;
+        mouseSensitivity?: number;
+    }, classes: RequiredThree);
     /**
      * A function that handles the camera movement event
      */
@@ -227,9 +253,4 @@ export declare class MovementCamera extends ControlCamera {
      */
     moveDown(s?: number): void;
 }
-declare global {
-    interface Window {
-        ControlCamera: typeof ControlCamera;
-        MovementCamera: typeof MovementCamera;
-    }
-}
+export {};

@@ -1,6 +1,27 @@
-import { Quaternion, Vector3, PerspectiveCamera } from "three";
+import THREE from "three"
 
 const RADIAN_HALF = 1.570796
+
+/**
+ * Required Three.js classes for the camera classes
+ */
+interface RequiredThree {
+  /**
+   * The Three.js PerspectiveCamera class
+   * @see https://threejs.org/docs/#api/en/cameras/PerspectiveCamera
+   */
+  PerspectiveCamera: typeof THREE.PerspectiveCamera;
+  /**
+   * The Three.js Quaternion class
+   * @see https://threejs.org/docs/#api/en/math/Quaternion
+   */
+  Quaternion: typeof THREE.Quaternion;
+  /**
+   * The Three.js Vector3 class
+   * @see https://threejs.org/docs/#api/en/math/Vector3
+   */
+  Vector3: typeof THREE.Vector3;
+}
 
 function clamp(min: number, num: number, max: number): number {
   return Math.min(Math.max(num, min), max);
@@ -10,32 +31,31 @@ function supportsPointerLock() {
   return "pointerLockElement" in document
 }
 
-function newCamera(o: {
-  fov: number,
+function newCamera(PerspectiveCamera: typeof THREE.PerspectiveCamera, o: {
+  fov?: number,
   width: number,
   height: number,
-  min: number,
-  max: number
+  min?: number,
+  max?: number
 }) {
   return new PerspectiveCamera(
-    o.fov || 80,
-    o.width / o.height,
-    o.min || 0.1,
-    o.max || 1000
+      o.fov || 80,
+      o.width / o.height,
+      o.min || 0.1,
+      o.max || 1000
   )
 }
 
 /**
  * Sets the quaternions for the x-axis and z-axis rotations from the given angles
  * @private
+ * @param Quaternion - The Three.js Quaternion class to be used
+ * @param Vector3 - The Three.js Vector3 class to be used
  * @param mathX - The angle in radians for the x-axis rotation
  * @param mathY - The angle in radians for the z-axis rotation
  * @returns The pair of quaternions for the rotations
  */
-function setQuaternion(mathX: number, mathY: number): {
-  qx: THREE.Quaternion
-  qz: THREE.Quaternion
-} {
+function setQuaternion(Quaternion: typeof THREE.Quaternion, Vector3: typeof THREE.Vector3, mathX: number, mathY: number): { qx: THREE.Quaternion, qz: THREE.Quaternion } {
   const qx = new Quaternion()
   qx.setFromAxisAngle(new Vector3(0, 1, 0), mathX)
   const qz = new Quaternion()
@@ -43,22 +63,25 @@ function setQuaternion(mathX: number, mathY: number): {
 
   return { qx, qz }
 }
-
 /**
  * Updates the camera quaternion from the given angles using the setQuaternion function
+ * @param Quaternion - The Three.js Quaternion class to be used
+ * @param Vector3 - The Three.js Vector3 class to be used
  * @param cam - The camera object to be updated
  * @param mathX - The angle in radians for the x-axis rotation
  * @param mathY - The angle in radians for the z-axis rotation
  */
-function updateCamera(cam: PerspectiveCamera, mathX: number, mathY: number) {
-  const { qx, qz } = setQuaternion(mathX, mathY)
+function updateCamera({Quaternion, Vector3}: {
+  Quaternion: typeof THREE.Quaternion,
+  Vector3: typeof THREE.Vector3
+}, cam: THREE.PerspectiveCamera, mathX: number, mathY: number) {
+  const { qx, qz } = setQuaternion(Quaternion, Vector3, mathX, mathY)
   const q = new Quaternion()
 
   q.multiply(qx)
   q.multiply(qz)
   cam.quaternion.copy(q)
 }
-
 /**
  * A class that controls the camera quaternion and rotation from pointer events
  */
@@ -86,35 +109,41 @@ export class ControlCamera {
   /**
    * The PerspectiveCamera that this camera uses
    */
-  camera: PerspectiveCamera
+  camera: THREE.PerspectiveCamera
   /**
    * The canvas element the camera is bound to
    */
   canvas!: HTMLCanvasElement
+  /**
+   * The Three.js classes to be used
+   */
+  protected readonly classes: RequiredThree
 
   /**
    * Creates a new ControlCamera instance with a new camera object
+   * @param o - The options for the camera object
    * @param o.canvas - The canvas element to bind the camera to
    * @param o.width - The canvas width
    * @param o.height - The canvas height
-   * @param [o={}] - The options for the camera object
    * @param [o.fov=80] - The field of view for the camera in degrees
    * @param [o.min=0.1] - The near clipping plane for the camera
    * @param [o.max=1000] - The far clipping plane for the camera
    * @param [o.mouseSensitivity=100] - The sensitivity of the camera movement
+   * @param classes - The Three.js classes to be used
    */
   constructor(o: {
     canvas: HTMLCanvasElement,
     width: number,
     height: number,
-    fov: number,
-    min: number,
-    max: number,
-    mouseSensitivity: number,
-  }) {
+    fov?: number,
+    min?: number,
+    max?: number,
+    mouseSensitivity?: number,
+  }, classes: RequiredThree) {
     if (window == undefined)
       console.warn("threejs-3d-camera should only be used in the browser")
-    this.camera = newCamera(o)
+    this.classes = classes
+    this.camera = newCamera(classes.PerspectiveCamera, o)
     this.mouseSensitivity = o?.mouseSensitivity || 100
     this.bind(o.canvas)
     this.loop()
@@ -125,7 +154,7 @@ export class ControlCamera {
    * Updates the camera quaternion from the current angles and requests an animation frame
    */
   private loop() {
-    updateCamera(this.camera, this.rx, this.ry)
+    updateCamera({...this.classes}, this.camera, this.rx, this.ry)
     requestAnimationFrame(() => this.loop())
   }
 
@@ -134,7 +163,7 @@ export class ControlCamera {
    * @param el - The element to bind to
    * @returns The current instance of ControlCamera
    */
-  private bind(el: HTMLCanvasElement): ControlCamera {
+  private bind(el: HTMLCanvasElement) {
     if (this.canvas) throw new Error("Camera is already bound to an element")
     this.canvas = el
     el.addEventListener("pointerdown", e => this.down(e))
@@ -244,9 +273,9 @@ export class ControlCamera {
 
     this.rx -= dx * ((0.005 * this.mouseSensitivity) / 100)
     this.ry = clamp(
-      -Math.PI / 2 + 0.1,
-      this.ry - dy * ((0.005 * this.mouseSensitivity) / 100),
-      Math.PI / 3
+        -Math.PI / 2 + 0.1,
+        this.ry - dy * ((0.005 * this.mouseSensitivity) / 100),
+        Math.PI / 3
     )
 
   }
@@ -266,7 +295,7 @@ export class ControlCamera {
    * Enables the camera panning using touch screen and adds the event listeners to the element
    * @returns The current instance of ControlCamera
    */
-  enableTouch(): ControlCamera {
+  enableTouch() {
     if (!this.canvas)
       throw new Error("Cannot enable camera panning without binding element")
     this.canPanTouch = true
@@ -277,7 +306,7 @@ export class ControlCamera {
    * Enables the camera panning using the mouse and adds the event listeners to the element
    * @returns The current instance of ControlCamera
    */
-  enableMouse(): ControlCamera {
+  enableMouse() {
     if (!this.canvas)
       throw new Error("Cannot enable camera panning without binding element")
     this.canPanMouse = true
@@ -291,8 +320,8 @@ export class ControlCamera {
    * @param y - The angle in radians for the y-axis rotation
    * @returns The current instance of ControlCamera
    */
-  setDefault(x: number, y: number): ControlCamera {
-    updateCamera(this.camera, x, y)
+  private setDefault (x: number, y: number) {
+    updateCamera({...this.classes}, this.camera, x, y)
     this.rx = x
     this.ry = y
     return this
@@ -302,7 +331,7 @@ export class ControlCamera {
    * Disables the camera panning using touch controls
    * @returns The current instance of ControlCamera
    */
-  disableTouch(): ControlCamera {
+  disableTouch() {
     this.canPanTouch = false
     return this
   }
@@ -311,7 +340,7 @@ export class ControlCamera {
    * Disables the camera panning using mouse controls
    * @returns The current instance of ControlCamera
    */
-  disableMouse(): ControlCamera {
+  disableMouse() {
     this.canPanTouch = false
     return this
   }
@@ -324,32 +353,33 @@ export class MovementCamera extends ControlCamera {
   /**
    * The direction vector for the camera movement
    */
-  direction: THREE.Vector3 = new Vector3()
+  direction: THREE.Vector3 = new this.classes.Vector3()
   /**
    * A boolean flag that indicates whether the camera can move or not
    */
   canMove: boolean = true
   /**
    * Creates a new MovementCamera instance with a new camera object
+   * @param o - The options for the camera object
    * @param o.canvas - The canvas element to bind the camera to
    * @param o.width - The canvas width
    * @param o.height - The canvas height
-   * @param [o={}] - The options for the camera object
    * @param [o.fov=80] - The field of view for the camera in degrees
    * @param [o.min=0.1] - The near clipping plane for the camera
    * @param [o.max=1000] - The far clipping plane for the camera
    * @param [o.mouseSensitivity=100] - The sensitivity of the camera movement
+   * @param classes - The Three.js classes to be used
    */
   constructor(o: {
     canvas: HTMLCanvasElement,
     width: number,
     height: number,
-    fov: number,
-    min: number,
-    max: number,
-    mouseSensitivity: number,
-  }) {
-    super(o)
+    fov?: number,
+    min?: number,
+    max?: number,
+    mouseSensitivity?: number,
+  }, classes: RequiredThree) {
+    super(o, classes)
   }
 
   /**
@@ -371,7 +401,7 @@ export class MovementCamera extends ControlCamera {
    */
   rawMoveForward(s: number = 0.05) {
     s = this.preMove(s)
-    const cameraDirection = new Vector3()
+    const cameraDirection = new this.classes.Vector3()
     this.camera.getWorldDirection(cameraDirection)
     cameraDirection.y = 0
 
@@ -386,7 +416,7 @@ export class MovementCamera extends ControlCamera {
    */
   moveForward(s: number = 0.05) {
     s = this.preMove(s)
-    const cameraDirection = new Vector3()
+    const cameraDirection = new this.classes.Vector3()
     this.camera.getWorldDirection(cameraDirection)
     cameraDirection.y = 0 // Disregard y-axis
     cameraDirection.normalize() // THIS IS IMPORTANT
@@ -441,16 +471,4 @@ export class MovementCamera extends ControlCamera {
   moveDown(s: number = 0.04) {
     this.moveUp(-s)
   }
-}
-
-declare global {
-  interface Window {
-    ControlCamera: typeof ControlCamera
-    MovementCamera: typeof MovementCamera
-  }
-}
-
-if (typeof window === "object") {
-  window.ControlCamera = ControlCamera
-  window.MovementCamera = MovementCamera
 }
