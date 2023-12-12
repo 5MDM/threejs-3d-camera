@@ -162,7 +162,7 @@ export declare class ControlCamera {
      * @param y - The angle in radians for the y-axis rotation
      * @returns The current instance of ControlCamera
      */
-    private setDefault;
+    setDefault(x: number, y: number): this;
     /**
      * Disables the camera panning using touch controls
      * @returns The current instance of ControlCamera
