@@ -175,7 +175,7 @@ export declare class ControlCamera {
     disableMouse(): this;
 }
 /**
- * A class that extends the ControlCamera class and adds movement functionality
+ * A class that extends the {@link ControlCamera} class and adds movement functionality
  */
 export declare class MovementCamera extends ControlCamera {
     /**
