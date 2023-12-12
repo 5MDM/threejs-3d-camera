@@ -320,7 +320,7 @@ export class ControlCamera {
    * @param y - The angle in radians for the y-axis rotation
    * @returns The current instance of ControlCamera
    */
-  private setDefault (x: number, y: number) {
+  setDefault (x: number, y: number) {
     updateCamera({...this.classes}, this.camera, x, y)
     this.rx = x
     this.ry = y
