@@ -1,4 +1,7 @@
 import { ControlCamera as _ControlCamera, MovementCamera as _MovementCamera } from "./index";
+/**
+ * A class that controls the camera quaternion and rotation from pointer events
+ */
 export declare class ControlCamera extends _ControlCamera {
     /**
      * Creates a new ControlCamera instance with a new camera object
@@ -21,6 +24,9 @@ export declare class ControlCamera extends _ControlCamera {
         mouseSensitivity?: number;
     });
 }
+/**
+ * A class that extends the {@link ControlCamera} class and adds movement functionality
+ */
 export declare class MovementCamera extends _MovementCamera {
     /**
      * Creates a new MovementCamera instance with a new camera object

@@ -1,6 +1,9 @@
 import {ControlCamera as _ControlCamera, MovementCamera as _MovementCamera} from "./index"
 import * as THREE from "three"
 
+/**
+ * A class that controls the camera quaternion and rotation from pointer events
+ */
 export class ControlCamera extends _ControlCamera {
   /**
    * Creates a new ControlCamera instance with a new camera object
@@ -25,6 +28,9 @@ export class ControlCamera extends _ControlCamera {
     super(o, {...THREE})
   }
 }
+/**
+ * A class that extends the {@link ControlCamera} class and adds movement functionality
+ */
 export class MovementCamera extends _MovementCamera {
   /**
    * Creates a new MovementCamera instance with a new camera object
