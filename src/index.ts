@@ -347,7 +347,7 @@ export class ControlCamera {
 }
 
 /**
- * A class that extends the ControlCamera class and adds movement functionality
+ * A class that extends the {@link ControlCamera} class and adds movement functionality
  */
 export class MovementCamera extends ControlCamera {
   /**
